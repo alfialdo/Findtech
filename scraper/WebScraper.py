@@ -1,4 +1,5 @@
 import random
+import re
 import time
 from typing import List
 
@@ -29,7 +30,7 @@ class WebScraper:
             return element.text.strip()
 
     # Scraper for newegg laptop/notebook product detail
-    def newegg_web_scraper(
+    def newegg_scraper(
         self, base_url="https://www.newegg.com/tools/laptop-finder?page={}", n_page=20
     ) -> List[List[Tag]]:
         pages = []
@@ -107,5 +108,49 @@ class WebScraper:
         except Exception as e:
             print(f"Error parsing newegg HTML content: {e}")
             return {}
+
+        return data
+
+    def cpu_benchmark_scraper(
+        self,
+        base_url="https://www.cpubenchmark.net/cpu-list/all",
+    ) -> List[Tag]:
+        with sync_playwright() as p:
+            # setting headless browser configurtion
+            browser = p.chromium.launch(headless=True)
+            context = browser.new_context(viewport={"width": 1200, "height": 1000})
+            page = context.new_page()
+            page.set_extra_http_headers(HEADERS)
+            page.goto(base_url, timeout=60000, wait_until="domcontentloaded")
+            page.wait_for_timeout(5000)
+            page.mouse.wheel(0, 5200)
+            time.sleep(random.uniform(2, 5))
+
+            print("Scraping: ", base_url)
+            soup = BeautifulSoup(page.content(), "html.parser")
+            table_content = soup.find("table", class_="cpulist")
+
+            if table_content is not None:
+                table_content = table_content.find_all("tr", id=re.compile("cpu*"))
+            else:
+                table_content = []
+
+        return table_content
+
+    def cpu_benchmark_html_parser(self, html_content) -> List[dict]:
+        data = []
+
+        for cpu in html_content:
+            temp = {}
+            temp["cpu"] = self._fetch_data(cpu, "a")
+            score = cpu.find_all("td")[1].get_text()
+
+            try:
+                clean_score = score.replace(",", "")
+                temp["score"] = float(clean_score) if clean_score else 0.0
+            except ValueError:
+                temp["score"] = 0.0
+
+            data.append(temp)
 
         return data
