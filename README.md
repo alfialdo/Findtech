@@ -7,9 +7,10 @@ This project represents end-to-end machine learning system design with features:
 - Raw data collection from e-commerce web scraping scheduled on daily basis
 - ML model to translates non-technical jargon question and answer into recommended product
 - Streamlit web app for user interaction and queries
+- End-to-end CI and CD pipeline using CircleCI, Docker, and Github workflows
 
 > Note:
-> This is my personal project built on curiosity and free-time :)
+> This is my personal project built on curiosity and free-time :) <br>
 > Therefore the whole project may not always be maintained 24/7.
 
 ---
@@ -28,13 +29,13 @@ Laptop/Notebook buyers with less knowledge about computer specs usually have the
 
 Refer to the problem statement above, we can create a **recommendation systems** that genereate list of specific Laptop/Notebook product based on curated features related to the common buyer questions such as:
 
-- Q1: What is the system of the product? (MacOS, Windows, etc)
+- Q1: What is the product system or brand? (Acer, ASUS, MacOS, Windows, etc)
 - Q2: How much is the product price? ($$ price)
-- Q3: How portable is the product? (weight, battery size)
-- Q4: Can it be used for my workload? (RAM, CPU, GPU)
-- Q5: Does the product suitbale for my activity? (outdoors, indoors, etc)
-- Q6: Does the product future-proof? (Upgradable components)
-- Q7: Do I need to buy complementary items? (ports, camera, bluetooth, etc)
+- Q3: Does it be suitable for my main usage? (RAM, CPU, GPU)
+- Q4: How portable is the product? (weight, battery size)
+- Q5: Do I need to buy complementary items? (ports, camera, etc)
+- Q6: Does the product suitable for my activity? (outdoors, indoors, etc)
+- Q7: Does the product have upgradable components? (RAM or SSD slot)
 - Q8: Does the screen support touch input? (stylus or finger touch)
 
 Here we encode the "technical" hardware and software specs to represents the answers to those questions. Then, train the ML model using that features to output top 5 products including the details based on prediction scores.
@@ -44,6 +45,10 @@ Here we encode the "technical" hardware and software specs to represents the ans
 # System Design
 
 ## Architecture Overview
+
+![](./assets/data_scraping.png)
+
+![](./assets/web_app.png)
 
 ## Data Model
 
@@ -56,10 +61,10 @@ Here we encode the "technical" hardware and software specs to represents the ans
 ## Prerequisites
 
 - Python >=3.12
-- Poetry =2.2.1
+- Poetry ==2.2.1
 - Docker
-- Supabase
-- Streamlit
+- CircleCI
+- Github Actions
 
 ## Configuration
 
