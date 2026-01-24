@@ -122,7 +122,6 @@ class WebScraper:
             page = context.new_page()
             page.set_extra_http_headers(HEADERS)
             page.goto(base_url, timeout=60000, wait_until="domcontentloaded")
-            page.wait_for_timeout(5000)
             page.mouse.wheel(0, 5200)
             time.sleep(random.uniform(2, 5))
 
@@ -137,20 +136,59 @@ class WebScraper:
 
         return table_content
 
-    def cpu_benchmark_html_parser(self, html_content) -> List[dict]:
-        data = []
+    def cpu_benchmark_html_parser(self, html_content: Tag) -> dict:
+        data = {}
 
-        for cpu in html_content:
-            temp = {}
-            temp["cpu"] = self._fetch_data(cpu, "a")
-            score = cpu.find_all("td")[1].get_text()
+        data["cpu"] = self._fetch_data(html_content, "a")
+        score = html_content.find_all("td")[1].get_text()
 
-            try:
-                clean_score = score.replace(",", "")
-                temp["score"] = float(clean_score) if clean_score else 0.0
-            except ValueError:
-                temp["score"] = 0.0
+        try:
+            clean_score = score.replace(",", "")
+            data["score"] = float(clean_score) if clean_score else 0.0
+        except ValueError:
+            data["score"] = 0.0
 
-            data.append(temp)
+        return data
+
+    def gpu_benchmark_scraper(
+        self,
+        base_url="https://www.videocardbenchmark.net/GPU_mega_page.html",
+    ) -> List[Tag]:
+        with sync_playwright() as p:
+            # setting headless browser configurtion
+            browser = p.chromium.launch(headless=True)
+            context = browser.new_context(viewport={"width": 1200, "height": 1000})
+            page = context.new_page()
+            page.set_extra_http_headers(HEADERS)
+            page.goto(base_url, timeout=60000, wait_until="domcontentloaded")
+            page.mouse.wheel(0, 5200)
+
+            page.select_option("select[name*='cputable_length']", "-1")
+            print("Change filter to show all rows")
+            time.sleep(random.uniform(2, 5))
+
+            print("Scraping: ", base_url)
+            soup = BeautifulSoup(page.content(), "html.parser")
+            table_tag = soup.find("table", id="cputable")
+
+            if table_tag is not None:
+                table_content = table_tag.find("tbody")
+
+                if table_content is not None:
+                    table_content = table_content.find_all("tr")
+
+                    return table_content
+
+        return []
+
+    def gpu_benchmark_html_parser(self, html_content: Tag) -> dict:
+        data = {}
+
+        data["gpu"] = self._fetch_data(html_content, "a")
+
+        specs = html_content.find_all("td")
+        data["score"] = float(specs[2].get_text().strip().replace(",", ""))
+        data["vram"] = specs[-2].get_text().strip()
+        data["categories"] = specs[-1].get_text().strip()
 
         return data
