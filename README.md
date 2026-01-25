@@ -1,5 +1,7 @@
 # Project Overview: Findtech
 
+[https://circleci.com/gh/CIRCLECI-GWP/Findtech.svg?style=svg](https://circleci.com/gh/CIRCLECI-GWP/Findtech){: target="\_blank"}
+
 Findtech is friendly and fast ML-based Laptop/Notebook recommender web app for non-technical persons who did not really know about "How to choose device that fit their needs and budget in the current market".
 
 This project represents end-to-end machine learning system design with features:
