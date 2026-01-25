@@ -1,6 +1,7 @@
-.PHONY: install install-dev activate run clean
+.PHONY: install install-dev activate run clean format lint test check
 
 install:
+	@echo "Install dependencies for production..."
 	@poetry install --without dev
 
 install-dev:
@@ -20,3 +21,22 @@ clean:
 	find . -type d -name ".mypy_cache" -exec rm -r {} +
 	find . -type d -name ".ruff_cache" -exec rm -r {} +
 	find . -type d -name "htmlcov" -exec rm -r {} +
+
+lint:
+	@echo "Check ruff and black linting..."
+	@poetry run ruff check src scraper tests
+	@poetry run black --check src scraper tests
+	@echo "Check mypy type..."
+	@poetry run mypy src scraper tests
+
+format:
+	@echo "Fix formatting with ruff and black..."
+	@poetry run ruff check --fix scraper src scraper tests
+	@poetry run black src scraper tests
+
+test:
+	@echo "Run all test.."
+	@poetry run pytest
+
+check: format lint test
+
