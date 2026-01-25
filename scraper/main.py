@@ -1,10 +1,11 @@
-from scraper import WebScraper
+# from scraper import WebScraper
 
 # TODO: add supabase database integration
 
 
 def main():
-    scraper = WebScraper()
+    pass
+    # scraper = WebScraper()
 
     # TODO: scraping newegg laptop/notebook product details
 
@@ -15,4 +16,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
