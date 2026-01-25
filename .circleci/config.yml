@@ -10,6 +10,9 @@ parameters:
 commands:
   install-project:
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "SHA256:Rgm6OzT2b/HEP18slG60F8ONJpQ3UtK8Uf3P/2Ms3AE"
       - checkout
       - python/install-packages:
           pkg-manager: poetry
