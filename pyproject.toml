@@ -40,6 +40,3 @@ enable = true
 vcs = "git"
 style = "pep440"
 
-[tool.pytest.ini_options]
-addopts = "--cov=src --cov=scraper --cov-report=term-missing --cov-report=xml"
-testpaths = ["tests"]
