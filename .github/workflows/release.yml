@@ -1,0 +1,30 @@
+jname: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Poetry & Plugin
+        run: |
+          pip install poetry
+          poetry self add "poetry-dynamic-versioning[plugin]"
+
+      - name: Build Package
+        run: poetry build
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*

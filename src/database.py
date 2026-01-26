@@ -25,6 +25,10 @@ class SupabaseManager:
     def insert_bulk_from_dict(self, table_name: str, data: List[Dict[str, Any]]) -> Any:
         try:
             response = self.client.table(table_name).insert(data).execute()
+
+            if response.data:
+                logger.info(f"Total inserted data to {table_name}: {response.data[0]}")
+
             return response
         except Exception as e:
             print(f"Error inserting into {table_name}: {e}")
