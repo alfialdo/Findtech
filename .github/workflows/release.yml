@@ -1,4 +1,4 @@
-jname: Release
+name: Release
 
 on:
   push:
