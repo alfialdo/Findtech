@@ -106,7 +106,7 @@ class WebScraper:
     def cpu_benchmark_scraper(
         self,
         base_url="https://www.cpubenchmark.net/cpu-list/all",
-    ) -> List[Tag] | None:
+    ) -> List[Tag]:
         results: List[Tag] = []
 
         with sync_playwright() as p:
@@ -119,7 +119,7 @@ class WebScraper:
             page.mouse.wheel(0, 5200)
             time.sleep(random.uniform(2, 5))
 
-            logger.info("Scraping: ", base_url)
+            logger.info(f"Scraping: {base_url}")
             soup = BeautifulSoup(page.content(), "html.parser")
             table_content = soup.find("table", class_="cpulist")
 
@@ -160,7 +160,7 @@ class WebScraper:
             logger.info("Change filter to show all rows")
             time.sleep(random.uniform(2, 5))
 
-            logger.info("Scraping: ", base_url)
+            logger.info(f"Scraping: {base_url}")
             soup = BeautifulSoup(page.content(), "html.parser")
             table_tag = soup.find("table", id="cputable")
 

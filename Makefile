@@ -23,10 +23,10 @@ clean:
 	find . -type d -name "htmlcov" -exec rm -r {} +
 
 lint:
-	@echo "Check ruff and black linting..."
+	@echo -e "\nCheck ruff and black linting..."
 	@poetry run ruff check src scraper tests
 	@poetry run black --check src scraper tests
-	@echo "Check mypy type..."
+	@echo -e "\nCheck mypy type..."
 	@poetry run mypy src scraper tests
 
 format:
@@ -34,9 +34,9 @@ format:
 	@poetry run ruff check --fix scraper src scraper tests
 	@poetry run black src scraper tests
 
-test:
-	@echo "Run all test.."
-	@poetry run pytest
+test: 
+	@echo -e "\nRun all test.."
+	@poetry run pytest -v
 
 check: format lint test
 
