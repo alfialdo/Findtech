@@ -52,9 +52,11 @@ Here we encode the "technical" hardware and software specs to represents the ans
 
 ![](./assets/web_app.png)
 
+![](./assets/ci_cd.png)
+
 ## Data Model
 
-![](./assets/data_model.png)
+<img src="assets/data_model.png" height="450" width="auto" />
 
 ## ML Modeling
 
@@ -68,7 +70,7 @@ Here we encode the "technical" hardware and software specs to represents the ans
 - Poetry ==2.2.1
 - Docker
 - CircleCI
-- Github Actions
+- Supabase
 
 ## Configuration
 
