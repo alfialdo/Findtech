@@ -1,6 +1,6 @@
 # Project Overview: Findtech
 
-<!-- [![CircleCI](https://circleci.com/gh/codepanda/Findtech.svg?style=svg&circle-token=CCIPAT_CosfU76CZWP9k6UEdANSqW_9de88e79275072c69dc98d420f5a2d0db1dab0b2)](https://circleci.com/gh/codepanda/Findtech) -->
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/alfialdo/Findtech/tree/master.svg?style=svg&circle-token=CCIPRJ_WgEmR64W1BCWMC4GSe7aQD_a941db54ed56f768b95316e3486b04a6a2410c9d)](https://dl.circleci.com/status-badge/redirect/gh/alfialdo/Findtech/tree/master)
 
 Findtech is friendly and fast ML-based Laptop/Notebook recommender web app for non-technical persons who did not really know about "How to choose device that fit their needs and budget in the current market".
 
@@ -53,6 +53,8 @@ Here we encode the "technical" hardware and software specs to represents the ans
 ![](./assets/web_app.png)
 
 ## Data Model
+
+![](./assets/data_model.png)
 
 ## ML Modeling
 
