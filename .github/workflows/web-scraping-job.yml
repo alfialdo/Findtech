@@ -37,8 +37,8 @@ jobs:
       - name: Install dependencies
         run: poetry install --no-interaction
 
-      - name: Install playwright
-        run: playwright install
+      - name: Install Playwright
+        run: poetry run playwright install
 
       - name: Run newegg web laptop/notebooks data scraping
         env:
