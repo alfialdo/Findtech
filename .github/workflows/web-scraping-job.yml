@@ -2,8 +2,8 @@ name: Weekly Web Scraping Job
 
 on:
   schedule:
-    # running daily at 8AM
-    - cron: "0 8 * * *"
+    # running daily at 11PM UTC
+    - cron: "0 23 * * *"
   workflow_dispatch:
 
 jobs:
@@ -36,6 +36,9 @@ jobs:
 
       - name: Install dependencies
         run: poetry install --no-interaction
+
+      - name: Install playwright
+        run: playwright install
 
       - name: Run newegg web laptop/notebooks data scraping
         env:
