@@ -48,15 +48,15 @@ Here we encode the "technical" hardware and software specs to represents the ans
 
 ## Architecture Overview
 
-<img src="assets/data_scraping.png" width="450" height="auto" />
+<img src="assets/data_scraping.png" width="520" height="auto" />
 
-<img src="assets/web_app.png" width="450" height="auto" />
+<img src="assets/web_app.png" width="520" height="auto" />
 
-<img src="assets/ci_cd.png" width="450" height="auto" />
+<img src="assets/ci_cd.png" width="520" height="auto" />
 
 ## Data Model
 
-<img src="assets/data_model.png" height="400" width="450" />
+<img src="assets/data_model.png" height="auto" width="520" />
 
 ## ML Modeling
 

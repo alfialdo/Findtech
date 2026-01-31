@@ -27,7 +27,9 @@ class SupabaseManager:
             response = self.client.table(table_name).insert(data).execute()
 
             if response.data:
-                logger.info(f"Total inserted data to {table_name}: {response.data[0]}")
+                logger.info(
+                    f"Total inserted data to {table_name}: {len(response.data)}"
+                )
 
             return response
         except Exception as e:
@@ -36,3 +38,23 @@ class SupabaseManager:
 
     def table(self, table_name: str) -> Any:
         return self.client.table(table_name)
+
+    def fetch_all(self, table_name: str) -> List[Dict]:
+        all_rows = []
+        batch_size = 1000
+        start = 0
+
+        # logger.info()
+        while True:
+            end = start + batch_size - 1
+            response = (
+                self.client.table(table_name).select("*").range(start, end).execute()
+            )
+            all_rows.extend(response.data)
+
+            if len(response.data) < batch_size:
+                break
+
+            start += batch_size
+
+        return all_rows
