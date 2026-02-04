@@ -6,7 +6,7 @@ from typing import Any, Dict, List
 from bs4 import BeautifulSoup, Tag
 from playwright.sync_api import sync_playwright
 
-from src.logger import setup_logger
+from src.utils import setup_logger
 
 logger = setup_logger(__name__)
 
