@@ -45,7 +45,7 @@ class LaptopRecommender:
         user_brands = user_input["brands"]
         user_budget = user_input["budget"]
         brand_feat = process_brand(self.data.item_name, user_brands)
-        user_lookup_emb = np.column_stack((laptop_embedding, brand_feat))
+        user_lookup_emb = np.hstack((laptop_embedding, brand_feat.reshape(-1, 1)))
 
         # Calculate the price decay with the input budget
         price_decays = self.data.price.apply(
@@ -60,7 +60,7 @@ class LaptopRecommender:
         sim_scores = sim_scores * price_decays
         top_indices = sim_scores.argsort()[-top_k:][::-1]
 
-        return self.data.iloc[top_indices]
+        return self.data.iloc[top_indices], sim_scores[top_indices]
 
     def generate_lookup_embedding(self):
         # Specs component
@@ -84,15 +84,20 @@ class LaptopRecommender:
         # Additional features
         feat_list = [
             "webcam",
-            "thunderebolt",
+            "thunderbolt",
             "backlit_keyboard",
             "card_reader",
-            "touch_screen",
+            "touchscreen",
         ]
         extra_feat = process_extra_feat(self.data[feat_list])
 
-        feat_embedding = np.column_stack(
-            (usage_embedding, portability, size, extra_feat)
+        feat_embedding = np.hstack(
+            (
+                usage_embedding,
+                portability.reshape(-1, 1),
+                size.reshape(-1, 1),
+                extra_feat,
+            )
         )
 
         return feat_embedding
@@ -101,15 +106,15 @@ class LaptopRecommender:
         brand = np.array([1])
         usage_vec = self._encode_usage(kwargs["usage"])
 
-        return np.column_stack(
+        return np.concatenate(
             (
-                usage_vec.T,
+                usage_vec,
                 np.array([kwargs["portability"]]),
                 np.array([kwargs["size"]]),
-                np.array(kwargs["extra"]).T,
+                np.array(kwargs["extra"]),
                 brand,
             )
-        )
+        ).reshape(1, -1)
 
     def _data_cleaning(self, data: pd.DataFrame) -> pd.DataFrame:
         filter_features = [
@@ -140,7 +145,7 @@ class LaptopRecommender:
         df = df.drop_duplicates(subset=["item_name"])
         df = df.dropna(subset=["price", "item_name"])
 
-        return df
+        return df.reset_index()
 
     def _usage_classifier(self, usage_df: pd.DataFrame) -> np.ndarray:
         def heuristic_classifier(x):
@@ -159,16 +164,16 @@ class LaptopRecommender:
             return "Personal"
 
         classified_usage = usage_df.apply(heuristic_classifier, axis=1)
-        usage_embedding = classified_usage.apply(self._encode_usage).to_numpy()
+        usage_embedding = classified_usage.apply(self._encode_usage).to_list()
 
-        return usage_embedding
+        return np.stack(usage_embedding)
 
-    def _encode_usage(self, usage_type: str):
+    def _encode_usage(self, usage_type: str) -> np.ndarray:
         vector = np.zeros(len(self.usage_types), dtype=int)
 
         try:
             idx = self.usage_types.index(usage_type)
-            vector[idx]
+            vector[idx] = 1
         except ValueError:
             logger.warning(
                 f"Category {usage_type} not found. Returning zeros vector instead."

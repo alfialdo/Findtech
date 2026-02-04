@@ -177,14 +177,18 @@ def process_size(screen_size: pd.Series):
         if pd.isna(x) or x == "":
             return base * 2  # medium
 
-        x = float()
+        match = re.search(r"\d+\.\d+", x)
+        if match:
+            x = float(match.group())
 
-        if x <= 13:
-            return base * 1  # small
-        elif x <= 16:
-            return base * 2  # medium
-        else:
-            return base * 3  # large
+            if x <= 13:
+                return base * 1  # small
+            elif x <= 16:
+                return base * 2  # medium
+            else:
+                return base * 3  # large
+
+        return base * 2  # medium
 
     feat = screen_size.apply(encode_size).to_numpy()
 
@@ -205,10 +209,12 @@ def process_extra_feat(extra_feat: pd.DataFrame):
         "card_reader",
         "touchscreen",
     ]
-    assert extra_feat.columns == feat_list, "Wrong feature list for extra feature"
 
-    for col in extra_feat.columns:
-        extra_feat[col] = extra_feat[col].apply(is_available)
+    columns = extra_feat.columns.to_list()
+    assert columns == feat_list, "Wrong feature list for extra feature"
+
+    for col in columns:
+        extra_feat.loc[:, col] = extra_feat[col].apply(is_available)
 
     feat = extra_feat.to_numpy()
 
