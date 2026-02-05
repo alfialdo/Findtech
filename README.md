@@ -31,14 +31,12 @@ Laptop/Notebook buyers with less knowledge about computer specs usually have the
 
 Refer to the problem statement above, we can create a **recommendation systems** that genereate list of specific Laptop/Notebook product based on curated features related to the common buyer questions such as:
 
-- Q1: What is the product system or brand? (Acer, ASUS, MacOS, Windows, etc)
+- Q1: What is the product system or brand? (Acer, ASUS, MSI, Samsung, etc)
 - Q2: How much is the product price? ($$ price)
-- Q3: Does it be suitable for my main usage? (RAM, CPU, GPU)
+- Q3: Does it be suitable for my main usage? (RAM, CPU, GPU, storage)
 - Q4: How portable is the product? (weight, battery size)
-- Q5: Do I need to buy complementary items? (ports, camera, etc)
-- Q6: Does the product suitable for my activity? (outdoors, indoors, etc)
-- Q7: Does the product have upgradable components? (RAM or SSD slot)
-- Q8: Does the screen support touch input? (stylus or finger touch)
+- Q5: I need big screen for my activity, can it fit that? (screen size, resolution)
+- Q6: Doe I need to buy complementary items? (touchscreen, webcam, card reader, etc)
 
 Here we encode the "technical" hardware and software specs to represents the answers to those questions. Then, train the ML model using that features to output top 5 products including the details based on prediction scores.
 
@@ -60,9 +58,35 @@ Here we encode the "technical" hardware and software specs to represents the ans
 
 ## ML Modeling
 
+The core recommendation engine utilizes a **Hybrid Content-Based** approach. This method ranks laptops by calculating the geometric similarity between a user's preferences and the available inventory, while applying a "soft" penalty for items that exceed the user's budget.
+
+### Feature Engineering
+
+The primary goal of this stage is to generate embeddings that serve as a lookup table for the model. To ensure recommendations feel relevant rather than just raw spec-matching, the system first automatically classifies every laptop into a "Persona" (Gaming, Content Design, Business, Academy, or Personal)
+
+Once classified, the Findtech system converts both the User and the Laptop into multi-dimensional vectors to calculate their mathematical compatibility:
+
+- **The Item (Laptop) Vector:** A composite vector that aggregates the Usage Category (One-Hot Encoded), Portability (Inverse Weight), Screen Size, Brand, and specific Extra Features (e.g., Webcam, Thunderbolt).
+- **The User (Query) Vector:** Constructed dynamically from user inputs. For example, if a user requests a "Gaming" laptop, the target category is set to "1", the desired portability/size is aligned, and the Brand flag is set to `1.0`.
+
+### Score-based Recommendation
+
+The final ranking score for each laptop is determined by the following formula:
+
+$$
+S_L = \underbrace{\cos(\theta)}_{\text{Similarity}} \times \underbrace{e^{-\alpha \times \max(0, P - B)}}_{\text{Price Decay}}
+$$
+
+This scoring mechanism consists of two key components:
+
+1. **Cosine Similarity ($\cos \theta$):** This measures the angle between the User's "Ideal Vector" and the Laptop's vector. A score of indicates a perfect feature match.
+2. **Price Decay:** Instead of strictly filtering out laptops that are slightly over budget, the system applies a "soft penalty."
+   - **Under Budget:** The score remains intact.
+   - **Over Budget:** The score decays exponentially.
+
 ---
 
-# Installation
+# How to Run?
 
 ## Prerequisites
 
@@ -72,10 +96,29 @@ Here we encode the "technical" hardware and software specs to represents the ans
 - CircleCI
 - Supabase
 
-## Configuration
-
 ## Install
 
 ---
 
-# How to Run?
+# Development
+
+## Installing Dependencies
+
+```bash
+# Ensure using python 3.12, install:
+make install-dev
+
+# or using poetry directly
+poetry install
+```
+
+## Pull-Request Workflow
+
+```bash
+# Create unit tests if needed, for local test run:
+make check
+
+# Create tag after merge
+git tag v1.*.* [commit-hash]
+
+```
