@@ -34,7 +34,7 @@ def fuzzy_search_mark(value: str, lookup: pd.DataFrame, extract: str, threshold=
     if match:
         _, score, idx = match
         if score >= threshold:
-            return float(lookup.loc[idx, f"{extract}_mark"])
+            return float(str(lookup.loc[idx, f"{extract}_mark"]))
 
     return np.nan
 
@@ -61,9 +61,9 @@ def process_brand(item_names: pd.Series, input_brands: List[str]):
 
 
 def process_memory(memory: pd.Series):
-    memory = memory.str.extract(r"(\d+)").astype(float)
-    median_val = memory.median()
-    feat = memory.fillna(median_val).to_numpy()
+    memory_clean = memory.str.extract(r"(\d+)").astype(float)
+    median_val = memory_clean.median()
+    feat = memory_clean.fillna(median_val).to_numpy()
     feat = min_max_scaling(feat)
 
     return feat

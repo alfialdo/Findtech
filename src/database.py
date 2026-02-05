@@ -39,7 +39,7 @@ class SupabaseManager:
     def table(self, table_name: str) -> Any:
         return self.client.table(table_name)
 
-    def fetch_all(self, table_name: str) -> List[Dict]:
+    def fetch_all(self, table_name: str):
         all_rows = []
         batch_size = 1000
         start = 0

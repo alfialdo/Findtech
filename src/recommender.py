@@ -60,7 +60,10 @@ class LaptopRecommender:
         sim_scores = sim_scores * price_decays
         top_indices = sim_scores.argsort()[-top_k:][::-1]
 
-        return self.data.iloc[top_indices], sim_scores[top_indices]
+        results = self.data.iloc[top_indices].reset_index(drop=True)
+        sim_scores = list(sim_scores[top_indices])
+
+        return results, sim_scores
 
     def generate_lookup_embedding(self):
         # Specs component
@@ -145,7 +148,7 @@ class LaptopRecommender:
         df = df.drop_duplicates(subset=["item_name"])
         df = df.dropna(subset=["price", "item_name"])
 
-        return df.reset_index()
+        return df.reset_index(drop=True)
 
     def _usage_classifier(self, usage_df: pd.DataFrame) -> np.ndarray:
         def heuristic_classifier(x):
