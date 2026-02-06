@@ -120,5 +120,6 @@ make check
 
 # Create tag after merge
 git tag v1.*.* [commit-hash]
+git push origin master --tag
 
 ```
