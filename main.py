@@ -1,20 +1,33 @@
 import streamlit as st
 
-from src.ui import apply_custom_styles, render_onboarding, render_user_input
+from src.ui import (
+    apply_custom_styles,
+    load_recommender_engine,
+    render_onboarding,
+    render_results,
+    render_user_input,
+)
 
 # Page Config
 st.set_page_config(page_title="Findtech", page_icon="💻", layout="centered")
 
 
 def main():
-    # 1. Apply Design
+    # Apply Design Styles
     apply_custom_styles()
 
-    # 2. Render Onboarding
+    # Cached model and lookup table
+    load_recommender_engine()
+
+    # Render Onboarding
     render_onboarding()
 
-    # 3. Render User Input
-    render_user_input()
+    # Render User Input
+    if st.session_state.get("started", False):
+        render_user_input()
+
+    if "recommendations" in st.session_state:
+        render_results()
 
 
 if __name__ == "__main__":

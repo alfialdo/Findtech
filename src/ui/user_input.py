@@ -1,5 +1,8 @@
+import base64
+
 import streamlit as st
 
+from src.ui import load_recommender_engine
 from src.ui.config import BRAND_LOGO, BRANDS, EXTRAS, SCREEN_SIZES, USAGE_TYPES
 from src.ui.styles import question_header
 
@@ -11,8 +14,42 @@ def toggle_brand(brand):
         st.session_state.q_brands.append(brand)
 
 
+def get_img_html(file_path):
+    try:
+        with open(file_path, "rb") as f:
+            data = base64.b64encode(f.read()).decode()
+        # We assign a custom class 'brand-logo' here!
+        return f'<img src="data:image/png;base64,{data}" class="brand-logo">'
+    except FileNotFoundError:
+        return ""
+
+
 def clear_brands():
     st.session_state.q_brands = []
+
+
+def run_recommendation():
+    selected_size = SCREEN_SIZES[st.session_state.q_screen]
+    selected_extra = [1 if feat in st.session_state.q_extras else 0 for feat in EXTRAS]
+
+    user_data = {
+        "brands": st.session_state.q_brands,
+        "budget": st.session_state.q_budget,
+        "usage": st.session_state.q_usage,
+        "portability": st.session_state.q_portability_val,
+        "size": selected_size,
+        "extra": selected_extra,
+    }
+
+    with st.spinner("Preferences Saved! Analyzing recommendations..."):
+        recom, laptop_emb = load_recommender_engine()
+        top_items, scores = recom.predict_top_k(user_data, laptop_emb, top_k=5)
+
+    st.session_state.recommendations = top_items
+    st.session_state.scores = scores
+    st.session_state.show_results = True
+
+    st.rerun()
 
 
 @st.fragment
@@ -43,13 +80,14 @@ def render_brand_preference():
                 with cols[j]:
                     # Image
                     img_path = BRAND_LOGO[brand_str]
-                    st.image(img_path, width="stretch")
+                    img_html = get_img_html(img_path)
+                    st.markdown(img_html, unsafe_allow_html=True)
 
                     # Button logic
                     is_selected = brand_str in st.session_state.q_brands
 
                     st.button(
-                        label=f"{'✅' if is_selected else ''} {brand_str.title()}",
+                        label=f"{'✅' if is_selected else ''} {brand_str.upper()}",
                         key=f"btn_{brand_str}",
                         type="primary" if is_selected else "secondary",
                         width="stretch",
@@ -59,9 +97,6 @@ def render_brand_preference():
 
 
 def render_user_input():
-    if not st.session_state.get("started", False):
-        return
-
     st.markdown("---")
 
     # Q1: BRAND PREFERENCE
@@ -113,11 +148,12 @@ def render_user_input():
     st.markdown("<br>", unsafe_allow_html=True)
     question_header("Q5. Preferred Screen Size?", "🖥️")
 
+    screen_options = list(SCREEN_SIZES.keys())
     screen_size = st.pills(
         "Select one:",
-        SCREEN_SIZES,
+        screen_options,
         selection_mode="single",
-        default=SCREEN_SIZES[1],
+        default=screen_options[1],
         key="q_screen",
     )
 
@@ -130,22 +166,7 @@ def render_user_input():
     )
 
     st.markdown("<br><br>", unsafe_allow_html=True)
-    col1, col2, col3 = st.columns([1, 2, 1])
+    _, col2, _ = st.columns([1, 2, 1])
     with col2:
         if st.button("🔍 Find My Laptop", type="primary", width="stretch"):
-            save_and_process()
-
-
-def save_and_process():
-    # This is where you would call your ML Backend
-    user_data = {
-        "brands": st.session_state.q_brands,
-        "budget": st.session_state.q_budget,
-        "usage": st.session_state.q_usage,
-        "portability": st.session_state.q_portability_val,
-        "screen": st.session_state.q_screen,
-        "extras": st.session_state.q_extras,
-    }
-
-    st.success("Preferences Saved! Calculating recommendations...")
-    st.json(user_data)
+            run_recommendation()

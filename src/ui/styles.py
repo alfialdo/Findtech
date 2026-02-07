@@ -36,18 +36,35 @@ def apply_custom_styles():
             transform: translateY(-2px);
         }}
 
-        div[data-testid="stImage"] img {{
-            height: 90px !important; 
-            object-fit: contain !important;
-            margin-bottom: 8px;
-            filter: grayscale(100%);
-            transition: filter 0.3s ease;
+        [data-testid="stHorizontalBlock"] {{
+            gap: 20px !important; /* Increases horizontal space between columns */
         }}
 
-        div[data-testid="stImage"] img:hover {{
+        div[data-testid="stColumn"] {{
+            margin-bottom: 20px !important; /* Adds space below each brand card */
+        }}
+
+        div[data-testid="stImage"] img {{
+            height: 100px !important;       
+            object-fit: contain !important;  
+            margin-bottom: 0px;
+        }}
+
+        .brand-logo {{
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            height: 90px;    
+            max-width: 100%;
+            object-fit: contain;
+            filter: grayscale(100%);    
+            transition: filter 0.3s ease;
+            margin-bottom: 20px;
+        }}
+
+        .brand-logo:hover {{
             filter: grayscale(0%);
         }}
-
 
         label[data-testid="stWidgetLabel"] p {{
             font-size: 18px !important; 
