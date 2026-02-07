@@ -23,13 +23,12 @@ run-dev:
 		$(DOCKER_IMG_NAME) \
 		streamlit run main.py --server.runOnSave=true --server.fileWatcherType=poll
 
-run-prod:
-	@echo "Running findtech-app prod mode..."
+run:
+	@echo "Running findtech-app production mode..."
 	docker run --rm -p 8501:8501 \
-		-v "$$(pwd)/src:/app/src" \
 		--env-file .env \
-		--name $(CONTAINER_NAME)-dev \
-		$(DOCKER_IMG_NAME) \
+		--name $(CONTAINER_NAME) \
+		$(DOCKER_IMG_NAME) 
 
 
 docker-stop:

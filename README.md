@@ -1,6 +1,19 @@
-# Project Overview: Findtech
+<h1 style="text-align: center;">Findtech</h1>
 
-[![CircleCI](https://dl.circleci.com/status-badge/img/gh/alfialdo/Findtech/tree/master.svg?style=svg&circle-token=CCIPRJ_WgEmR64W1BCWMC4GSe7aQD_a941db54ed56f768b95316e3486b04a6a2410c9d)](https://dl.circleci.com/status-badge/redirect/gh/alfialdo/Findtech/tree/master)
+<div align="center">
+
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54&style=plastic)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white&style=plastic)
+![Playwright](https://img.shields.io/badge/-playwright-%232EAD33?style=for-the-badge&logo=playwright&logoColor=white&style=plastic)
+![Streamlit](https://img.shields.io/badge/Streamlit-%23FE4B4B.svg?style=for-the-badge&logo=streamlit&logoColor=white&style=plastic)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white&style=plastic)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/alfialdo/Findtech/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/alfialdo/Findtech/tree/master)
+
+</div>
+
+<p align="center">
+  <img src="assets/findtech_demo.gif" alt="Alt Text" />
+</p>
 
 Findtech is friendly and fast ML-based Laptop/Notebook recommender web app for non-technical persons who did not really know about "How to choose device that fit their needs and budget in the current market".
 
@@ -46,15 +59,19 @@ Here we encode the "technical" hardware and software specs to represents the ans
 
 ## Architecture Overview
 
-<img src="assets/data_scraping.png" width="560" height="auto" />
-
-<img src="assets/web_app.png" width="560" height="auto" />
-
-<img src="assets/ci_cd.png" width="560" height="auto" />
+<div align="center">
+    <img src="assets/data_scraping.png" width="570" height="auto" />
+    <br>
+    <img src="assets/web_app.png" width="570" height="auto" />
+    <br>
+    <img src="assets/ci_cd.png" width="570" height="auto" />
+</div>
 
 ## Data Model
 
-<img src="assets/data_model.png" height="auto" width="560" />
+<div align="center">
+<img src="assets/data_model.png" height="auto" width="570" />
+</div>
 
 ## ML Modeling
 
@@ -67,7 +84,7 @@ The primary goal of this stage is to generate embeddings that serve as a lookup 
 Once classified, the Findtech system converts both the User and the Laptop into multi-dimensional vectors to calculate their mathematical compatibility:
 
 - **The Item (Laptop) Vector:** A composite vector that aggregates the Usage Category (One-Hot Encoded), Portability (Inverse Weight), Screen Size, Brand, and specific Extra Features (e.g., Webcam, Thunderbolt).
-- **The User (Query) Vector:** Constructed dynamically from user inputs. For example, if a user requests a "Gaming" laptop, the target category is set to "1", the desired portability/size is aligned, and the Brand flag is set to `1.0`.
+- **The User (Query) Vector:** Constructed dynamically from user inputs. For example, if a user requests a "Gaming" laptop, the target category is set to `1.0`, the desired portability/size is `0 ~ 1.0`, and the Brand flag is set to `weighted value`.
 
 ### Score-based Recommendation
 
@@ -96,20 +113,35 @@ This scoring mechanism consists of two key components:
 - CircleCI
 - Supabase
 
-## Install
+## Install with Docker
+
+```bash
+make docker-build
+```
+
+## Run Streamlit App
+
+```bash
+make run
+```
 
 ---
 
 # Development
 
-## Installing Dependencies
+## Install Dependencies
 
 ```bash
-# Ensure using python 3.12, install:
+# Ensure using python version is 3.12, install:
 make install-dev
 
 # or using poetry directly
 poetry install
+
+# test web app
+make docker-build
+make run-dev
+
 ```
 
 ## Pull-Request Workflow
