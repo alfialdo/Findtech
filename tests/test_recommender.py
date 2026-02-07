@@ -22,6 +22,16 @@ def sample_data():
             244: 'HP EliteBook 840 G5 14" FHD 1920 x 1080 Notebook – 8th Gen Intel QUAD Core i5-8350U 512 GB SSD 16GB DDR4 RAM Webcam Windows 11 Pro',
             627: 'Dell Latitude E6420 14" LED Laptop Intel Core i5 2.50 GHz CPU 16 GB DDR3 RAM 128 GB SSD DVD-R HDMI WiFi Webcam Windows 10 Pro(2)',
         },
+        "url": {
+            36: "https://item-1-sample",
+            244: "https://item-2-sample",
+            627: "https://item-3-sample",
+        },
+        "image": {
+            36: "https://image-1-sample",
+            244: "https://image-2-sample",
+            627: "https://image-3-sample",
+        },
         "price": {36: 499.99, 244: 339.0, 627: 140.0},
         "screen_size": {36: '10.9"', 244: '14.0"', 627: '14.1"'},
         "memory": {36: "8GB", 244: "16GB", 627: "16GB"},

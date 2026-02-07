@@ -1,4 +1,4 @@
-.PHONY: install install-dev activate run clean format lint test check docker-build run-dev run-prod docker-stop
+.PHONY: install install-dev activate run clean format lint test check docker-build run-dev run docker-stop
 
 DOCKER_IMG_NAME = findtech
 CONTAINER_NAME = findtech-app
@@ -40,22 +40,22 @@ docker-stop:
 
 
 clean:
-	find . -type d -name "__pycache__" -exec rm -r {} +
+	find . -type d -name "__pycache__" -exec rm -rf {} +
 	find . -type f -name "*.pyc" -delete
 	find . -type f -name "*.pyo" -delete
 	find . -type f -name "*.pyd" -delete
 	find . -type f -name ".coverage" -delete
-	find . -type d -name "*.egg-info" -exec rm -r {} +
-	find . -type d -name ".pytest_cache" -exec rm -r {} +
-	find . -type d -name ".mypy_cache" -exec rm -r {} +
-	find . -type d -name ".ruff_cache" -exec rm -r {} +
-	find . -type d -name "htmlcov" -exec rm -r {} +
+	find . -type d -name "*.egg-info" -exec rm -rf {} +
+	find . -type d -name ".pytest_cache" -exec rm -rf {} +
+	find . -type d -name ".mypy_cache" -exec rm -rf {} +
+	find . -type d -name ".ruff_cache" -exec rm -rf {} +
+	find . -type d -name "htmlcov" -exec rm -rf {} +
 
 lint:
-	@echo -e "\nCheck ruff and black linting..."
+	@echo "\nCheck ruff and black linting..."
 	@poetry run ruff check src scraper tests
 	@poetry run black --check src scraper tests
-	@echo -e "\nCheck mypy type..."
+	@echo "\nCheck mypy type..."
 	@poetry run mypy src scraper tests
 
 format:
@@ -64,7 +64,7 @@ format:
 	@poetry run black src scraper tests
 
 test: 
-	@echo -e "\nRun all test.."
+	@echo "\nRun all test.."
 	@poetry run pytest -v
 
 check: format lint test

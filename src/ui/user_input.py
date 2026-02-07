@@ -106,7 +106,7 @@ def render_user_input():
     st.markdown("<br>", unsafe_allow_html=True)
     question_header("Q2. What is your budget limit?", "💰")
 
-    budget = st.slider(
+    st.slider(
         "Slide to set max price",
         min_value=0,
         max_value=8000,
@@ -120,7 +120,7 @@ def render_user_input():
     st.markdown("<br>", unsafe_allow_html=True)
     question_header("Q3. What will you use it for?", "🎯")
 
-    usage = st.radio(
+    st.radio(
         "Select your primary activity:", USAGE_TYPES, horizontal=True, key="q_usage"
     )
 
@@ -149,7 +149,7 @@ def render_user_input():
     question_header("Q5. Preferred Screen Size?", "🖥️")
 
     screen_options = list(SCREEN_SIZES.keys())
-    screen_size = st.pills(
+    st.pills(
         "Select one:",
         screen_options,
         selection_mode="single",
@@ -161,9 +161,7 @@ def render_user_input():
     st.markdown("<br>", unsafe_allow_html=True)
     question_header("Q6. Must-have features?", "✨")
 
-    extras = st.pills(
-        "Select all that apply:", EXTRAS, selection_mode="multi", key="q_extras"
-    )
+    st.pills("Select all that apply:", EXTRAS, selection_mode="multi", key="q_extras")
 
     st.markdown("<br><br>", unsafe_allow_html=True)
     _, col2, _ = st.columns([1, 2, 1])
