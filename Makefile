@@ -1,4 +1,7 @@
-.PHONY: install install-dev activate run clean format lint test check
+.PHONY: install install-dev activate run clean format lint test check docker-build run-dev run-prod docker-stop
+
+DOCKER_IMG_NAME = findtech
+CONTAINER_NAME = findtech-app
 
 install:
 	@echo "Install dependencies for production..."
@@ -7,8 +10,36 @@ install:
 install-dev:
 	@poetry install
 
-run:
-	poetry run python -m src.main
+docker-build:
+	@echo "Building Docker image..."
+	docker build -t $(DOCKER_IMG_NAME) .
+
+run-dev:
+	@echo "Running findtech-app dev mode..."
+	docker run --rm -p 8501:8501 \
+		-v "$$(pwd)/src:/app/src" \
+		--env-file .env \
+		--name $(CONTAINER_NAME)-dev \
+		$(DOCKER_IMG_NAME) \
+		streamlit run main.py --server.runOnSave=true --server.fileWatcherType=poll
+
+run-prod:
+	@echo "Running findtech-app prod mode..."
+	docker run --rm -p 8501:8501 \
+		-v "$$(pwd)/src:/app/src" \
+		--env-file .env \
+		--name $(CONTAINER_NAME)-dev \
+		--restart unless-stopped \ 
+		$(DOCKER_IMG_NAME) \
+
+
+docker-stop:
+	@echo "Stopping and clean containers"
+	docker stop $(CONTAINER_NAME) || true
+	docker stop $(CONTAINER_NAME)-dev || true
+	docker rm $(CONTAINER_NAME) || true
+	docker rm $(CONTAINER_NAME)-dev || true
+
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -r {} +

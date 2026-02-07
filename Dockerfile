@@ -8,7 +8,6 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
 	build-essential \
 	curl \
-	software-properties-common \
 	libgomp1 \
 	&& rm -rf /var/lib/apt/lists/*
 
@@ -16,13 +15,15 @@ RUN pip install poetry
 
 COPY pyproject.toml poetry.lock ./
 
-RUN poetry install --no-intertaction
+RUN poetry install --no-root --no-interaction
 
 FROM python:3.12-slim AS runtime
 
 WORKDIR /app
 
 COPY --from=builder /app/.venv /app/.venv
+
+ENV PATH="/app/.venv/bin:$PATH"
 
 COPY . .
 
