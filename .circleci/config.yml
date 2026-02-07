@@ -11,6 +11,9 @@ commands:
   install-project:
     steps:
       - checkout
+      - run:
+          name: Ensure poetry lock is up to date
+          command: poetry lock
       - python/install-packages:
           pkg-manager: poetry
 

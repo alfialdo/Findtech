@@ -1,0 +1,24 @@
+# Secret vars
+.env
+
+# Python garbage
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+
+# System/IDE files
+.git
+.gitignore
+.dockerignore
+.vscode/
+.idea/
+.DS_Store
+
+# Build related
+Dockerfile
+Makefile

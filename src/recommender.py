@@ -124,6 +124,8 @@ class LaptopRecommender:
             # brands
             "id",
             "item_name",
+            "url",
+            "image",
             # item pricing
             "price",
             # spces --> pricig
