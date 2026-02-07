@@ -50,7 +50,7 @@ def process_brand(item_names: pd.Series, input_brands: List[str]):
     def check_brand(x):
         for brand in input_brands:
             if brand in x:
-                return 1.0
+                return 10.0  # set higher weight for brand preferences
 
         return 0.0
 
