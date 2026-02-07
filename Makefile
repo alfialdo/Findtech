@@ -29,7 +29,6 @@ run-prod:
 		-v "$$(pwd)/src:/app/src" \
 		--env-file .env \
 		--name $(CONTAINER_NAME)-dev \
-		--restart unless-stopped \ 
 		$(DOCKER_IMG_NAME) \
 
 

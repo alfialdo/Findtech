@@ -1,7 +1,61 @@
 import streamlit as st
 
-from src.ui.config import BRANDS, EXTRAS, SCREEN_SIZES, USAGE_TYPES
+from src.ui.config import BRAND_LOGO, BRANDS, EXTRAS, SCREEN_SIZES, USAGE_TYPES
 from src.ui.styles import question_header
+
+
+def toggle_brand(brand):
+    if brand in st.session_state.q_brands:
+        st.session_state.q_brands.remove(brand)
+    else:
+        st.session_state.q_brands.append(brand)
+
+
+def clear_brands():
+    st.session_state.q_brands = []
+
+
+@st.fragment
+def render_brand_preference():
+    question_header("Q1. Any favorite brands?", "🏆")
+
+    if "q_brands" not in st.session_state:
+        st.session_state.q_brands = []
+
+    is_all_selected = len(st.session_state.q_brands) == 0
+
+    st.button(
+        "✨ Anything",
+        type="primary" if is_all_selected else "secondary",
+        width="stretch",
+        key="btn_brand_all",
+        on_click=clear_brands,
+    )
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    cols_per_row = 4
+    for i in range(0, len(BRANDS), cols_per_row):
+        cols = st.columns(cols_per_row)
+        for j in range(cols_per_row):
+            if i + j < len(BRANDS):
+                brand_str = BRANDS[i + j]
+                with cols[j]:
+                    # Image
+                    img_path = BRAND_LOGO[brand_str]
+                    st.image(img_path, width="stretch")
+
+                    # Button logic
+                    is_selected = brand_str in st.session_state.q_brands
+
+                    st.button(
+                        label=f"{'✅' if is_selected else ''} {brand_str.title()}",
+                        key=f"btn_{brand_str}",
+                        type="primary" if is_selected else "secondary",
+                        width="stretch",
+                        on_click=toggle_brand,
+                        args=(brand_str,),
+                    )
 
 
 def render_user_input():
@@ -11,13 +65,7 @@ def render_user_input():
     st.markdown("---")
 
     # Q1: BRAND PREFERENCE
-    question_header("Q1. Any favorite brands?", "🏆")
-    selected_brands = st.pills(
-        "Select brands (Leave empty for all)",
-        BRANDS,
-        selection_mode="multi",
-        key="q_brands",
-    )
+    render_brand_preference()
 
     # Q2: BUDGET
     st.markdown("<br>", unsafe_allow_html=True)
@@ -84,7 +132,7 @@ def render_user_input():
     st.markdown("<br><br>", unsafe_allow_html=True)
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        if st.button("🔍 Find My Laptop", type="primary", use_container_width=True):
+        if st.button("🔍 Find My Laptop", type="primary", width="stretch"):
             save_and_process()
 
 
